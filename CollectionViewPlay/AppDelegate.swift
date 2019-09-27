@@ -41,22 +41,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationWillTerminate(_ application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
-
-//    @objc func rotated() {
-//
-//        if UIDevice.current.orientation.isLandscape {
-//            let mainSB = UIStoryboard(name: "Main", bundle: nil)
-//            if let vc = mainSB.instantiateViewController(withIdentifier: "ViewController") as? ViewController {
-//                vc.deviceOrientaion = "Landscape"
-//            }
-//            print("Landscape")
-//        }
-//
-//        if UIDevice.current.orientation.isPortrait {
-//            print("Portrait")
-//        }
-//
-//    }
     
 }
 

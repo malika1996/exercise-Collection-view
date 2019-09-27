@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  GridElementsViewController.swift
 //  CollectionViewPlay
 //
 //  Created by vinmac on 16/09/19.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class GridElementsViewController: UIViewController {
     
     // MARK: IBOutlets
     @IBOutlet private weak var collectionView: UICollectionView!
@@ -31,9 +31,7 @@ class ViewController: UIViewController {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             self.addThreeElementsToEndOfItemsArray()
         }
-        
     }
-    
     @IBAction func btnOperation6Tapped(_ sender: UIButton) {
         self.addThreeElementsToEndOfItemsArray()
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
@@ -41,18 +39,17 @@ class ViewController: UIViewController {
         }
     }
     @IBAction func btnSettingsTapped(_ sender: UIButton) {
-        let alertController = UIAlertController(title: "Info", message: "Coming soon! Kindly change parameters in code", preferredStyle: UIAlertController.Style.alert)
-        
-        alertController.addAction(UIAlertAction(title: "Ok", style: .default, handler: { (action: UIAlertAction!) in
-        }))
-        
-       self.present(alertController, animated: true, completion: nil)
+        guard let vc = self.storyboard?.instantiateViewController(withIdentifier: "SettingsViewController") as? SettingsViewController else {return }
+        vc.delegate = self        
+        self.present(vc, animated: true, completion: nil)
     }
     
-    // MARK: Constants
+    // MARK: Default values
     private var cellSpacing: CGFloat = 10
     private var cellSize: CGFloat = 50
     private var cellSizeCopy: CGFloat = 1
+    private var animationSpeed: Double = 1
+    
     private var itemsNameArr = [Character]()
     
     // MARK: View controller life cycle methods
@@ -73,13 +70,12 @@ class ViewController: UIViewController {
             let u = UnicodeScalar(i)
             // Convert UnicodeScalar to a Character.
             let char = Character(u!)
-            print(char)
+//            print(char)
             self.itemsNameArr.append(char)
         }
     }
     
     private func addThreeElementsToEndOfItemsArray() {
-        
         let lastCharacterAsString = "\(self.itemsNameArr[self.itemsNameArr.count - 1])"
         if var intValue = Character(lastCharacterAsString).asciiValue {
             
@@ -92,9 +88,11 @@ class ViewController: UIViewController {
                 print(char)
                 self.itemsNameArr.append(char)
                 intValue += 1
-                self.collectionView.insertItems(at: [IndexPath(row: self.itemsNameArr.count-1, section: 0)])
+                
+                UIView.animate(withDuration: 1, animations: {
+                    self.collectionView.insertItems(at: [IndexPath(row: self.itemsNameArr.count-1, section: 0)])
+                })
             }
-            
         }
     }
     
@@ -108,13 +106,16 @@ class ViewController: UIViewController {
         }
         if indexForE != -1 && indexForE != self.itemsNameArr.count-1{
             self.itemsNameArr.remove(at: indexForE)
-            self.collectionView.deleteItems(at: [IndexPath(row: indexForE, section: 0)])
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            UIView.animate(withDuration: self.animationSpeed, animations: {
+                self.collectionView.deleteItems(at: [IndexPath(row: indexForE, section: 0)])
+            })
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
                 self.itemsNameArr.append("e")
-                self.collectionView.insertItems(at: [IndexPath(row: self.itemsNameArr.count-1, section: 0)])
+                UIView.animate(withDuration: self.animationSpeed, animations: {
+                    self.collectionView.insertItems(at: [IndexPath(row: self.itemsNameArr.count-1, section: 0)])
+                })
             }
         }
-        
     }
     
     private func removeThreeElementsFromEndOfItemsArray() {
@@ -123,9 +124,11 @@ class ViewController: UIViewController {
             for _ in 0..<3 {
                 self.itemsNameArr.remove(at: self.itemsNameArr.count - 1)
             }
-            self.collectionView.deleteItems(at: [IndexPath(row: itemsCount - 1, section: 0), IndexPath(row: itemsCount - 2, section: 0), IndexPath(row: itemsCount - 3, section: 0)])
+            
+            UIView.animate(withDuration: self.animationSpeed, animations: {
+                self.collectionView.deleteItems(at: [IndexPath(row: itemsCount - 1, section: 0), IndexPath(row: itemsCount - 2, section: 0), IndexPath(row: itemsCount - 3, section: 0)])
+            })
         }
-        
     }
     
     private func updateItemAtSecondPosition() {
@@ -140,7 +143,6 @@ class ViewController: UIViewController {
                     cell.lblItemName.text = "!"
                 }
             }
-            
         }
     }
     
@@ -149,14 +151,15 @@ class ViewController: UIViewController {
             for _ in 0..<3 {
                 self.itemsNameArr.remove(at: 0)
             }
-            self.collectionView.deleteItems(at: [IndexPath(row: 0, section: 0), IndexPath(row: 1, section: 0), IndexPath(row: 2, section: 0)])
+            UIView.animate(withDuration: self.animationSpeed, animations: {
+                self.collectionView.deleteItems(at: [IndexPath(row: 0, section: 0), IndexPath(row: 1, section: 0), IndexPath(row: 2, section: 0)])
+            })
         }
     }
-
 }
 
 //MARK: Collection view delegate methods
-extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
+extension GridElementsViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return self.itemsNameArr.count
@@ -168,10 +171,8 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
         cell.lblItemName.text = "\(self.itemsNameArr[indexPath.row])"
         if UIApplication.shared.statusBarOrientation.isLandscape {
             self.cellSize = self.cellSizeCopy * CGFloat(1.5)
-            print("Device is in landscape mode")
         } else {
             self.cellSize = self.cellSizeCopy
-            print("Device is in portrait mode")
         }
         cell.setGridSize(size: self.cellSize)
         return cell
@@ -187,19 +188,27 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
                 cell.myView.isHidden = false
             })
         }
-        
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         self.collectionView.reloadData()
     }
-    
 }
 
-extension ViewController: UICollectionViewDelegateFlowLayout {
-    
+extension GridElementsViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
         return self.cellSpacing
+    }
+}
+
+extension GridElementsViewController: SettingsDataDelegate {
+    func setSettingsData(animationSpeed: Double, elementSize: Double, spacingBetweenElements: Double) {
+        self.animationSpeed = animationSpeed
+        self.cellSize = CGFloat(elementSize)
+        self.cellSpacing = CGFloat(spacingBetweenElements)
+        self.cellSizeCopy = self.cellSize
+        self.collectionView.reloadData()
+        self.dismiss(animated: true, completion: nil)
     }
 }
