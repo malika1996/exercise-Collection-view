@@ -14,31 +14,37 @@ class GridElementsViewController: UIViewController {
     @IBOutlet private weak var collectionView: UICollectionView!
     
     // MARK: IBActions
-    @IBAction func btnOperation1Tapped(_ sender: UIButton) {
+    @IBAction private func btnOperation1Tapped(_ sender: UIButton) {
         self.addThreeElementsToEndOfItemsArray()
     }
-    @IBAction func btnOperation2Tapped(_ sender: UIButton) {
+    
+    @IBAction private func btnOperation2Tapped(_ sender: UIButton) {
         self.removeThreeElementsFromEndOfItemsArray()
     }
-    @IBAction func btnOperation3Tapped(_ sender: UIButton) {
+    
+    @IBAction private func btnOperation3Tapped(_ sender: UIButton) {
         self.updateItemAtSecondPosition()
     }
-    @IBAction func btnOperation4Tapped(_ sender: UIButton) {
+    
+    @IBAction private func btnOperation4Tapped(_ sender: UIButton) {
         self.moveElementEToTheEnd()
     }
-    @IBAction func btnOperation5Tapped(_ sender: UIButton) {
+    
+    @IBAction private func btnOperation5Tapped(_ sender: UIButton) {
         self.removeThreeFromBeginningOfItemsArray()
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             self.addThreeElementsToEndOfItemsArray()
         }
     }
-    @IBAction func btnOperation6Tapped(_ sender: UIButton) {
+    
+    @IBAction private func btnOperation6Tapped(_ sender: UIButton) {
         self.addThreeElementsToEndOfItemsArray()
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             self.removeThreeFromBeginningOfItemsArray()
         }
     }
-    @IBAction func btnSettingsTapped(_ sender: UIButton) {
+    
+    @IBAction private func btnSettingsTapped(_ sender: UIButton) {
         guard let vc = self.storyboard?.instantiateViewController(withIdentifier: "SettingsViewController") as? SettingsViewController else {return }
         vc.delegate = self        
         self.present(vc, animated: true, completion: nil)
@@ -60,7 +66,6 @@ class GridElementsViewController: UIViewController {
             flowLayout.estimatedItemSize = CGSize(width: 1 , height: 1)
         }
         self.cellSizeCopy = self.cellSize
-        
     }
     
     // MARK: Private methods
