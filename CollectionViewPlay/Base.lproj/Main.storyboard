@@ -17,7 +17,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="Mcp-c1-DCR">
-                                <rect key="frame" x="20" y="757" width="374" height="50"/>
+                                <rect key="frame" x="20" y="762" width="374" height="50"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vrS-xI-bKM">
                                         <rect key="frame" x="0.0" y="0.0" width="123.5" height="50"/>
@@ -58,7 +58,7 @@
                                 </constraints>
                             </stackView>
                             <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="HYR-L5-cZF">
-                                <rect key="frame" x="20" y="812" width="374" height="50"/>
+                                <rect key="frame" x="20" y="817" width="374" height="50"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="v1J-x1-KcU">
                                         <rect key="frame" x="0.0" y="0.0" width="123.5" height="50"/>
@@ -101,7 +101,7 @@ from beg</string>
                                 </constraints>
                             </stackView>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="EnK-aT-Pk0">
-                                <rect key="frame" x="20" y="99" width="374" height="653"/>
+                                <rect key="frame" x="20" y="99" width="374" height="658"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="0dF-jE-74D">
                                     <size key="itemSize" width="134" height="124"/>
@@ -188,7 +188,7 @@ from beg</string>
                         <constraints>
                             <constraint firstItem="Mcp-c1-DCR" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="8fq-ve-2kj"/>
                             <constraint firstItem="EnK-aT-Pk0" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="8fw-QC-j26"/>
-                            <constraint firstItem="HYR-L5-cZF" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="Fy8-TM-TQh"/>
+                            <constraint firstItem="HYR-L5-cZF" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" constant="5" id="Fy8-TM-TQh"/>
                             <constraint firstItem="HYR-L5-cZF" firstAttribute="top" secondItem="Mcp-c1-DCR" secondAttribute="bottom" constant="5" id="MS9-mJ-GEb"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="Mcp-c1-DCR" secondAttribute="trailing" constant="20" id="Poy-EJ-VoG"/>
                             <constraint firstItem="HYR-L5-cZF" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="S8X-o8-iD0"/>

@@ -81,9 +81,8 @@ class GridElementsViewController: UIViewController {
     }
     
     private func addThreeElementsToEndOfItemsArray() {
-        let lastCharacterAsString = "\(self.itemsNameArr[self.itemsNameArr.count - 1])"
+        let lastCharacterAsString = (self.itemsNameArr.count > 0) ? "\(self.itemsNameArr[self.itemsNameArr.count - 1])" : "z"
         if var intValue = Character(lastCharacterAsString).asciiValue {
-            
             for _ in 0..<3 {
                 if intValue >= 97-1+26{
                     intValue -= 26
@@ -129,7 +128,6 @@ class GridElementsViewController: UIViewController {
             for _ in 0..<3 {
                 self.itemsNameArr.remove(at: self.itemsNameArr.count - 1)
             }
-            
             UIView.animate(withDuration: self.animationSpeed, animations: {
                 self.collectionView.deleteItems(at: [IndexPath(row: itemsCount - 1, section: 0), IndexPath(row: itemsCount - 2, section: 0), IndexPath(row: itemsCount - 3, section: 0)])
             })
@@ -184,13 +182,15 @@ extension GridElementsViewController: UICollectionViewDelegate, UICollectionView
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        self.itemsNameArr.remove(at: indexPath.row)
+//        self.itemsNameArr.remove(at: indexPath.row)
         if let cell = self.collectionView.cellForItem(at: indexPath) as? GridCell {
-            
             UIView.transition(with: cell.myView, duration: 0.5, options: .transitionFlipFromTop, animations: nil, completion: { _ in
-                cell.myView.isHidden = true
-                self.collectionView.deleteItems(at: [IndexPath(row: indexPath.row, section: 0)])
-                cell.myView.isHidden = false
+                if indexPath.row < self.itemsNameArr.count {
+                    self.itemsNameArr.remove(at: indexPath.row)
+                    cell.myView.isHidden = true
+                    self.collectionView.deleteItems(at: [IndexPath(row: indexPath.row, section: 0)])
+                    cell.myView.isHidden = false
+                }
             })
         }
     }
