@@ -46,7 +46,10 @@ class GridElementsViewController: UIViewController {
     
     @IBAction private func btnSettingsTapped(_ sender: UIButton) {
         guard let vc = self.storyboard?.instantiateViewController(withIdentifier: "SettingsViewController") as? SettingsViewController else {return }
-        vc.delegate = self        
+        vc.delegate = self
+        vc.animationSpeed = self.animationSpeed
+        vc.elementSize = self.cellSize
+        vc.spacing = self.cellSpacing
         self.present(vc, animated: true, completion: nil)
     }
     
@@ -55,7 +58,6 @@ class GridElementsViewController: UIViewController {
     private var cellSize: CGFloat = 50
     private var cellSizeCopy: CGFloat = 1
     private var animationSpeed: Double = 1
-    
     private var itemsNameArr = [Character]()
     
     // MARK: View controller life cycle methods
@@ -68,6 +70,11 @@ class GridElementsViewController: UIViewController {
         self.cellSizeCopy = self.cellSize
     }
     
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        self.collectionView.reloadData()
+    }
+    
     // MARK: Private methods
     private func charactersFormation() {
         for i in 97..<97+26 {
@@ -75,7 +82,6 @@ class GridElementsViewController: UIViewController {
             let u = UnicodeScalar(i)
             // Convert UnicodeScalar to a Character.
             let char = Character(u!)
-//            print(char)
             self.itemsNameArr.append(char)
         }
     }
@@ -89,11 +95,10 @@ class GridElementsViewController: UIViewController {
                 }
                 let u = UnicodeScalar(intValue+1)
                 let char = Character(u)
-                print(char)
                 self.itemsNameArr.append(char)
                 intValue += 1
                 
-                UIView.animate(withDuration: 1, animations: {
+                UIView.animate(withDuration: self.animationSpeed, animations: {
                     self.collectionView.insertItems(at: [IndexPath(row: self.itemsNameArr.count-1, section: 0)])
                 })
             }
@@ -110,7 +115,7 @@ class GridElementsViewController: UIViewController {
         }
         if indexForE != -1 && indexForE != self.itemsNameArr.count-1{
             self.itemsNameArr.remove(at: indexForE)
-            UIView.animate(withDuration: self.animationSpeed, animations: {
+            UIView.animate(withDuration: 0.5, animations: {
                 self.collectionView.deleteItems(at: [IndexPath(row: indexForE, section: 0)])
             })
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
@@ -140,7 +145,7 @@ class GridElementsViewController: UIViewController {
             if let cell = self.collectionView.cellForItem(at: IndexPath(row: 2, section: 0)) as? GridCell {
                 cell.alpha = 0
                 cell.transform = CGAffineTransform(scaleX: 0.1, y: 0.1)
-                UIView.animate(withDuration: 0.5) {
+                UIView.animate(withDuration: self.animationSpeed) {
                     cell.alpha = 1
                     cell.transform = .identity
                     cell.lblItemName.text = "!"
@@ -182,9 +187,8 @@ extension GridElementsViewController: UICollectionViewDelegate, UICollectionView
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-//        self.itemsNameArr.remove(at: indexPath.row)
         if let cell = self.collectionView.cellForItem(at: indexPath) as? GridCell {
-            UIView.transition(with: cell.myView, duration: 0.5, options: .transitionFlipFromTop, animations: nil, completion: { _ in
+            UIView.transition(with: cell.myView, duration: self.animationSpeed, options: .transitionFlipFromTop, animations: nil, completion: { _ in
                 if indexPath.row < self.itemsNameArr.count {
                     self.itemsNameArr.remove(at: indexPath.row)
                     cell.myView.isHidden = true
@@ -193,11 +197,6 @@ extension GridElementsViewController: UICollectionViewDelegate, UICollectionView
                 }
             })
         }
-    }
-    
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        self.collectionView.reloadData()
     }
 }
 
