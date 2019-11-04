@@ -48,7 +48,7 @@ class GridElementsViewController: UIViewController {
         guard let vc = self.storyboard?.instantiateViewController(withIdentifier: "SettingsViewController") as? SettingsViewController else {return }
         vc.delegate = self
         vc.animationSpeed = self.animationSpeed
-        vc.elementSize = self.cellSize
+        vc.elementSize = self.cellSizeCopy
         vc.spacing = self.cellSpacing
         self.present(vc, animated: true, completion: nil)
     }
@@ -65,14 +65,25 @@ class GridElementsViewController: UIViewController {
         super.viewDidLoad()
         self.charactersFormation()
         if let flowLayout = self.collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
-            flowLayout.estimatedItemSize = CGSize(width: 1 , height: 1)
+            flowLayout.itemSize = CGSize(width: self.cellSize, height: self.cellSize)
         }
         self.cellSizeCopy = self.cellSize
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        self.collectionView.reloadData()
+        if UIApplication.shared.statusBarOrientation.isLandscape {
+            self.cellSize = self.cellSizeCopy * CGFloat(1.5)
+        } else {
+            self.cellSize = self.cellSizeCopy
+        }
+        self.collectionView.collectionViewLayout.invalidateLayout()
+        DispatchQueue.main.async {
+            // your stuff here executing after collectionView has been layouted
+            if let flowLayout = self.collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
+                flowLayout.itemSize = CGSize(width: self.cellSize , height: self.cellSize)
+            }
+        }
     }
     
     // MARK: Private methods
@@ -174,7 +185,6 @@ extension GridElementsViewController: UICollectionViewDelegate, UICollectionView
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        
         guard let cell = self.collectionView.dequeueReusableCell(withReuseIdentifier: "GridCell", for: indexPath) as? GridCell else {return UICollectionViewCell()}
         cell.lblItemName.text = "\(self.itemsNameArr[indexPath.row])"
         if UIApplication.shared.statusBarOrientation.isLandscape {
@@ -182,7 +192,9 @@ extension GridElementsViewController: UICollectionViewDelegate, UICollectionView
         } else {
             self.cellSize = self.cellSizeCopy
         }
-        cell.setGridSize(size: self.cellSize)
+        if let flowLayout = self.collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
+            flowLayout.itemSize = CGSize(width: self.cellSize , height: self.cellSize)
+        }
         return cell
     }
     
